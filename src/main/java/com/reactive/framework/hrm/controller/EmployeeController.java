@@ -6,6 +6,7 @@ import com.reactive.framework.hrm.module.Employees;
 import com.reactive.framework.hrm.services.EmployeeServices;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import reactor.core.publisher.Flux;
 
 import java.util.List;
 import java.util.concurrent.ExecutionException;
@@ -25,14 +26,19 @@ public class EmployeeController {
         return "";
     }
 
-    @RequestMapping(value="/list", method = RequestMethod.GET)
+   /* @RequestMapping(value="/list", method = RequestMethod.GET)
     public @ResponseBody List<Employees> getEmployees(){
         return employeeDao.findAll();
-    }
+    }*/
 
-    @RequestMapping(value="/asyncEmployees", method = RequestMethod.GET)
+    /*@RequestMapping(value="/asyncEmployees", method = RequestMethod.GET)
     public @ResponseBody List<Employees> getAsyncEmployeeDetails() throws ExecutionException, InterruptedException, JsonProcessingException {
         return employeeServices.getAsyncEmployees();
+    }*/
+
+    @GetMapping("/allEmployees")
+    public @ResponseBody Flux<Employees> getAllEmployees(){
+        return employeeServices.findAllEmployees();
     }
 
 }

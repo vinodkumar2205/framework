@@ -4,12 +4,14 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.MapperFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.reactive.framework.hrm.dao.EmployeeDao;
 import com.reactive.framework.hrm.module.Employees;
 import com.reactive.framework.hrm.module.EmployeesRes;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
+import reactor.core.publisher.Flux;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -18,12 +20,15 @@ import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 
 @Service
-public class EmployeeServices {
+public class EmployeeServices implements EmployeeServiceImpl {
+
+    @Autowired
+    EmployeeDao employeeDao;
 
     @Autowired
     RestTemplate restTemplate;
 
-    public CompletableFuture<List<Employees>> getRestCallEmployees() throws JsonProcessingException {
+    /*public CompletableFuture<List<Employees>> getRestCallEmployees() throws JsonProcessingException {
         HttpHeaders headers = new HttpHeaders();
         headers.setAccept(Arrays.asList(MediaType.APPLICATION_JSON));
         HttpEntity<String> entity = null;
@@ -46,5 +51,10 @@ public class EmployeeServices {
         List<Employees> employeesList = new ArrayList<>();
         employeesList = cf.get();
         return employeesList;
+    }*/
+
+    @Override
+    public Flux<Employees> findAllEmployees() {
+        return employeeDao.findAll().switchIfEmpty(Flux.empty());
     }
 }
